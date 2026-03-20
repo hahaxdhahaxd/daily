@@ -1,0 +1,23 @@
+name: Daily Streak Commit
+
+on:
+  schedule:
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Make daily commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          echo "$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> streak.log
+          git add streak.log
+          git commit -m "chore: daily streak update $(date -u '+%Y-%m-%d')"
+          git push
